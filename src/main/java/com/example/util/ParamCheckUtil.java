@@ -64,6 +64,9 @@ public class ParamCheckUtil {
         defaultRuleMap.put(RELATE, JSON.parseObject(defaultRule.getString(RELATE), DefaultRule.class));
         defaultRuleMap.put(RANGE, JSON.parseObject(defaultRule.getString(RANGE), DefaultRule.class));
 
+        // 将所有的添加到一个list中, 设置对应的ruleName
+        defaultRuleMap.values().forEach(Console::log);
+
         // 将默认值设置到对应的校验规则中
         checkItems.forEach(item -> {
 
