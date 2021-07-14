@@ -4,7 +4,7 @@
     {
       "field": "name",
       "fieldName": "联系人",
-      "rule": [
+      "rules": [
         {
           "code": "required-true"
         },
@@ -28,7 +28,7 @@
     {
       "field": "idCard",
       "fieldName": "身份证号",
-      "rule": [
+      "rules": [
         {
           "code": "required-false"
         },
@@ -63,9 +63,9 @@
       ]
     }
   ],
-  "defaultRules": {
+  "defaultRule": {
     "required": {
-      "default": {
+      "defaultItem": {
         "desc": "必填类型的默认项在这边配置"
       },
       "values": [
@@ -81,7 +81,7 @@
       ]
     },
     "regex": {
-      "default": {
+      "defaultItem": {
         "msg": "{}格式不正确",
         "desc": "正则表达式检查的默认值,配置项中未设置时默认使用此值"
       },
@@ -183,7 +183,7 @@
       ]
     },
     "len": {
-      "default": {
+      "defaultItem": {
         "desc": "长度相关限制在这边配置"
       },
       "values": [
@@ -202,7 +202,7 @@
       ]
     },
     "relate": {
-      "default": {
+      "defaultItem": {
         "desc": "字段关联默认限制在这边配置"
       },
       "values": [
@@ -233,7 +233,7 @@
       ]
     },
     "range": {
-      "default": {
+      "defaultItem": {
         "desc": "值可选范围的默认值在这边配置"
       },
       "values": [
