@@ -149,7 +149,7 @@
         {
           "code": "reg-huishang-email",
           "value": "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$",
-          "desc": "徽商邮件校验"
+          "desc": "邮件校验"
         },
         {
           "code": "reg-num-english",
@@ -178,7 +178,7 @@
           "code": "reg-loan-account-huishang",
           "value": "^?[0-9]+$",
           "msg": "经销商放款账号必须纯数字",
-          "desc": "徽商经销商放款账号"
+          "desc": "经销商放款账号"
         }
       ]
     },

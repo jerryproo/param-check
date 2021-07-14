@@ -13,10 +13,7 @@ public enum ResultCode {
      * 参数校验配置错误
      */
     PARAM_CHECK_NOT_VALID(4055, "参数校验配置错误"),
-    /**
-     * 模板格式不正确
-     */
-    TEMPLATE_FORMAT_DATA_ERROR(4282, "模板格式不正确");
+    ;
 
     private final Integer code;
     private final String msg;
