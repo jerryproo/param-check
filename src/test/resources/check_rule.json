@@ -1,0 +1,252 @@
+{
+  "desc": "字段校验用json模板, defaultRules中配置了常用的校验格式,在rule中可以按照对应的规则进行配置, checkList用于设置各个字段的校验规则 relList用于设定关联字段的校验",
+  "checkList": [
+    {
+      "field": "name",
+      "fieldName": "联系人",
+      "rule": [
+        {
+          "code": "required-true"
+        },
+        {
+          "code": "len-min",
+          "value": 2
+        },
+        {
+          "code": "reg-name",
+          "msg": "{}格式错误"
+        },
+        {
+          "code": "rel-require-one",
+          "fields": [
+            "idCard",
+            "telephone"
+          ]
+        }
+      ]
+    },
+    {
+      "field": "idCard",
+      "fieldName": "身份证号",
+      "rule": [
+        {
+          "code": "required-false"
+        },
+        {
+          "code": "len-min",
+          "value": 18
+        },
+        {
+          "code": "len-max",
+          "value": 18
+        },
+        {
+          "code": "reg-idCard"
+        },
+        {
+          "code": "range",
+          "value": [
+            "123",
+            "345"
+          ]
+        }
+      ]
+    }
+  ],
+  "relList": [
+    {
+      "type": "rel-require-all",
+      "fields": [
+        "name",
+        "idCard",
+        "telephone"
+      ]
+    }
+  ],
+  "defaultRules": {
+    "required": {
+      "default": {
+        "desc": "必填类型的默认项在这边配置"
+      },
+      "values": [
+        {
+          "code": "required-true",
+          "msg": "{}必填",
+          "desc": "必填项,为空时会提示XXX必填, 也可以在relList中设置 rel-require-all, 在其中的fields中添加字段也可以用于限定必填"
+        },
+        {
+          "code": "required-false",
+          "desc": "非必填, 如果有值并且设置了其他判断条件,按照其他的判断条件进行判断"
+        }
+      ]
+    },
+    "regex": {
+      "default": {
+        "msg": "{}格式不正确",
+        "desc": "正则表达式检查的默认值,配置项中未设置时默认使用此值"
+      },
+      "values": [
+        {
+          "code": "reg-name",
+          "value": "^[\\u4e00-\\u9fa5][\\u4e00-\\u9fa5\\u00b7]*[\\u4e00-\\u9fa5]$",
+          "desc": "姓名校验"
+        },
+        {
+          "code": "reg-num",
+          "value": "^[0-9]*$",
+          "msg": "{}必须为数字",
+          "desc": "数字校验"
+        },
+        {
+          "code": "reg-idCard",
+          "value": "(^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}[0-9Xx]$)",
+          "desc": "身份证校验"
+        },
+        {
+          "code": "reg-phone",
+          "value": "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$",
+          "desc": "手机号校验"
+        },
+        {
+          "code": "reg-phone2",
+          "value": "^1[3-9][0-9]{9}$",
+          "desc": "手机号校验(gamma用)"
+        },
+        {
+          "code": "reg-home-tel",
+          "value": "^(\\+\\d{2}-)?0\\d{2,3}-\\d{7,8}$",
+          "desc": "家庭电话校验"
+        },
+        {
+          "code": "reg-engine-no",
+          "value": "^([a-zA-Z]|\\d){6,20}$",
+          "msg": "发动机号不合法",
+          "desc": "发动机号校验"
+        },
+        {
+          "code": "reg-decision-engine-no",
+          "value": "(?i)^[-－a-z0-9 ]{1,30}$",
+          "msg": "发动机号有误",
+          "desc": "决策引擎发动机号参数校验, 这个和上面的发动机号校验都存在,按需设置"
+        },
+        {
+          "code": "reg-car-number",
+          "value": "^[京|津|沪|渝|冀|豫|云|辽|晋|湘|皖|鲁|鄂|苏|浙|赣|新|桂|甘|黑|蒙|陕|吉|闽|贵|粤|青|藏|川|宁|琼][A-Za-z][A-Za-z0-9]{5,7}$",
+          "msg": "车牌号码不合法",
+          "desc": "车牌号校验"
+        },
+        {
+          "code": "reg-decision-car-number",
+          "value": "^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z][A-Z][A-Z0-9]{4,5}[A-Z0-9挂学警港澳]$",
+          "msg": "车牌号有误",
+          "desc": "决策引擎那边的车牌号校验, 和上面的车牌号码校验都存在, 按需设置"
+        },
+        {
+          "code": "reg-email",
+          "value": "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?",
+          "desc": "邮箱校验"
+        },
+        {
+          "code": "reg-huishang-email",
+          "value": "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$",
+          "desc": "徽商邮件校验"
+        },
+        {
+          "code": "reg-num-english",
+          "value": "[0-9a-zA-Z]{1,}",
+          "msg": "{}只能由字母和数字组成",
+          "desc": "校验只能为字母和数字(行方准入编码长度只能由字母和数字组成)"
+        },
+        {
+          "code": "reg-license",
+          "value": "^\\d{12}$",
+          "msg": "行驶证编号有误",
+          "desc": "行驶证编号校验"
+        },
+        {
+          "code": "reg-password",
+          "value": "[0-9A-Za-z_-]{6,16}",
+          "msg": "密码格式不正确",
+          "desc": "密码格式校验"
+        },
+        {
+          "code": "reg-postcode",
+          "value": "^\\d{6}$",
+          "desc": "邮编校验"
+        },
+        {
+          "code": "reg-loan-account-huishang",
+          "value": "^?[0-9]+$",
+          "msg": "经销商放款账号必须纯数字",
+          "desc": "徽商经销商放款账号"
+        }
+      ]
+    },
+    "len": {
+      "default": {
+        "desc": "长度相关限制在这边配置"
+      },
+      "values": [
+        {
+          "code": "len-min",
+          "type": "min",
+          "value": 0,
+          "msg": "{}长度不得少于{}位"
+        },
+        {
+          "code": "len-max",
+          "type": "max",
+          "value": 10,
+          "msg": "{}长度不得超过{}位"
+        }
+      ]
+    },
+    "relate": {
+      "default": {
+        "desc": "字段关联默认限制在这边配置"
+      },
+      "values": [
+        {
+          "code": "rel-require-one",
+          "msg": "{}不可全为空",
+          "fields": [],
+          "desc": "当前字段和fields中的字段值比较,只要有一个不为空即可"
+        },
+        {
+          "code": "rel-require-all",
+          "msg": "{}不可为空",
+          "fields": [],
+          "desc": "当前字段和fields中的字段所有值都不可以为空"
+        },
+        {
+          "code": "rel-require-other",
+          "msg": "{}不可为空",
+          "fields": [],
+          "desc": "当前字段不为空时,其他字段也不可为空"
+        },
+        {
+          "code": "rel-unique",
+          "msg": "{}重复",
+          "fields": [],
+          "desc": "关联的字段中不可以有重复的值"
+        }
+      ]
+    },
+    "range": {
+      "default": {
+        "desc": "值可选范围的默认值在这边配置"
+      },
+      "values": [
+        {
+          "code": "range-1",
+          "msg": "{}值可选范围为: {}",
+          "values": [
+            "v1",
+            "v2"
+          ],
+          "desc": "range标签用于限定值只可以在这个values 的 List之中"
+        }
+      ]
+    }
+  }
+}
