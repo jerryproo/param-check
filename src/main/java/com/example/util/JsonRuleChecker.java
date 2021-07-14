@@ -11,7 +11,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.exception.BizException;
 import com.example.exception.ResultCode;
-import com.sun.istack.internal.NotNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -118,7 +117,6 @@ public class JsonRuleChecker {
      * @param jsonArray jsonArray
      * @return jsonArray
      */
-    @NotNull
     private static JSONArray getSoft(JSONArray jsonArray) {
         return Optional.ofNullable(jsonArray).orElse(new JSONArray());
     }
@@ -130,7 +128,6 @@ public class JsonRuleChecker {
      * @param jsonObject jsonObject
      * @return jsonObject
      */
-    @NotNull
     private static JSONObject getSoft(JSONObject jsonObject) {
         return Optional.ofNullable(jsonObject).orElse(new JSONObject());
     }
