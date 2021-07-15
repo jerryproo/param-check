@@ -29,9 +29,4 @@ public class CheckRule {
      * 校验值
      */
     private String value;
-
-    /**
-     * 校验规则类型
-     */
-    private String type;
 }

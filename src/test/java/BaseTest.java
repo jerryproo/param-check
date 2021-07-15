@@ -1,3 +1,4 @@
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.example.util.JsonRuleChecker;
 import com.example.util.ParamCheckUtil;
@@ -19,13 +20,11 @@ public class BaseTest {
 
 
     public static String readToString(File file) {
-
         long fileLength = file.length();
         byte[] fileContent = new byte[(int) fileLength];
         try {
             FileInputStream in = new FileInputStream(file);
-            final int read = in.read(fileContent);
-            Console.log(read);
+            in.read(fileContent);
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,7 +41,7 @@ public class BaseTest {
 
     @Test
     public void testParamCheckUtil() {
-        ParamCheckUtil.check(getCheckObject(), getCheckRulesStr());
+        Console.log(ParamCheckUtil.check(getCheckObject(), getCheckRulesStr()));
     }
 
     @Test
@@ -59,7 +58,8 @@ public class BaseTest {
     }
 
     private String getCheckRulesStr() {
-        return readToString(new File(Objects.requireNonNull(BaseTest.class.getResource(FILE_NAME)).getFile()));
+        final File file = new File(Objects.requireNonNull(BaseTest.class.getResource(FILE_NAME)).getFile());
+        return new String(FileUtil.readBytes(file), StandardCharsets.UTF_8);
     }
 
 }

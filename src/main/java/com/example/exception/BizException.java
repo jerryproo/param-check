@@ -1,5 +1,7 @@
 package com.example.exception;
 
+import com.example.enums.LogLevel;
+import com.example.enums.ResultCode;
 import lombok.Getter;
 
 /**

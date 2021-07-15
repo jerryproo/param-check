@@ -44,7 +44,7 @@
           "code": "reg-idCard"
         },
         {
-          "code": "range",
+          "code": "range-1",
           "value": [
             "123",
             "345"
@@ -55,7 +55,7 @@
   ],
   "relList": [
     {
-      "type": "rel-require-all",
+      "code": "rel-require-all",
       "fields": [
         "name",
         "idCard",
@@ -189,13 +189,11 @@
       "values": [
         {
           "code": "len-min",
-          "type": "min",
           "value": 0,
           "msg": "{}长度不得少于{}位"
         },
         {
           "code": "len-max",
-          "type": "max",
           "value": 10,
           "msg": "{}长度不得超过{}位"
         }
