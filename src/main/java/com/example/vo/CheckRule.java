@@ -9,19 +9,21 @@ import lombok.Data;
  */
 @Data
 public class CheckRule {
+
     /**
-     * 校验规则名
+     * 规则名
      */
     private String ruleName;
+
+    /**
+     * 提示消息模板
+     */
+    private String msg;
+
     /**
      * 校验规则code
      */
     private String code;
-
-    /**
-     * 校验规则提示消息(可用{} 格式化)
-     */
-    private String msg;
 
     /**
      * 校验值

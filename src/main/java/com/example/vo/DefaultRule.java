@@ -18,7 +18,7 @@ public class DefaultRule {
     /**
      * 默认配置项
      */
-    private DefaultItem defaultItem;
+    private CheckRule defaultItem;
 
     /**
      * 默认参数校验的规则List
