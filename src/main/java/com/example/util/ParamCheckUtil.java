@@ -1,10 +1,12 @@
 package com.example.util;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.enums.CheckRuleNameEnum;
 import com.example.vo.CheckItem;
 import com.example.vo.CheckRule;
 import com.example.vo.DefaultRule;
@@ -21,12 +23,6 @@ import java.util.stream.Stream;
 
 import static com.example.enums.ConstantEnum.CHECK_LIST;
 import static com.example.enums.ConstantEnum.DEFAULT_RULE;
-import static com.example.enums.ConstantEnum.LEN;
-import static com.example.enums.ConstantEnum.RANGE;
-import static com.example.enums.ConstantEnum.REGEX;
-import static com.example.enums.ConstantEnum.RELATE;
-import static com.example.enums.ConstantEnum.REQUIRED;
-
 /**
  * @Author jerrypro
  * @Date 2021/7/14
@@ -57,9 +53,9 @@ public class ParamCheckUtil {
     private static String doCheck(JSONObject checkTarget, JSONObject checkRule) {
         // 获取校验对象List
         final List<CheckItem> checkRuleList = getCheckItems(checkRule);
-//        checkRuleList.forEach(item -> {
-//            item.getRules().forEach(Console::log);
-//        });
+        checkRuleList.forEach(item -> {
+            item.getRules().forEach(Console::log);
+        });
         return null;
     }
 
@@ -116,11 +112,11 @@ public class ParamCheckUtil {
      */
     private static Map<String, DefaultRule> getDefaultRuleMap(JSONObject defaultRule) {
         Map<String, DefaultRule> defaultRuleMap = MapUtil.newHashMap(5);
-        defaultRuleMap.put(REQUIRED, JSON.parseObject(defaultRule.getString(REQUIRED), DefaultRule.class));
-        defaultRuleMap.put(REGEX, JSON.parseObject(defaultRule.getString(REGEX), DefaultRule.class));
-        defaultRuleMap.put(LEN, JSON.parseObject(defaultRule.getString(LEN), DefaultRule.class));
-        defaultRuleMap.put(RELATE, JSON.parseObject(defaultRule.getString(RELATE), DefaultRule.class));
-        defaultRuleMap.put(RANGE, JSON.parseObject(defaultRule.getString(RANGE), DefaultRule.class));
+        for (CheckRuleNameEnum nameEnum : CheckRuleNameEnum.values()) {
+            String code = nameEnum.getCode();
+            String rule = defaultRule.getString(code);
+            defaultRuleMap.put(code, JSON.parseObject(rule, DefaultRule.class));
+        }
         return defaultRuleMap;
     }
 
