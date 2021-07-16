@@ -51,7 +51,7 @@ public class BaseTest {
 
     private CheckObject getCheckObject() {
         CheckObject checkObject = new CheckObject();
-        checkObject.setName("test-name");
+        checkObject.setName("");
         checkObject.setOrderNo("orderNo");
         checkObject.setPhone("phone");
         return checkObject;

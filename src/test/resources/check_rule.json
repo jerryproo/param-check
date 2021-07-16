@@ -1,12 +1,14 @@
 {
-  "desc": "字段校验用json模板, defaultRules中配置了常用的校验格式,在rule中可以按照对应的规则进行配置, checkList用于设置各个字段的校验规则 relList用于设定关联字段的校验",
+  "desc": "字段校验用json模板,checkMode all为所有字段都校验之后返回, one为有一个不通过即返回 defaultRules中配置了常用的校验格式,在rule中可以按照对应的规则进行配置, checkList用于设置各个字段的校验规则 relList用于设定关联字段的校验",
+  "checkMode": "all",
   "checkList": [
     {
       "field": "name",
       "fieldName": "联系人",
       "rules": [
         {
-          "code": "required-true"
+          "code": "required-true",
+          "msg": "{}不可为空"
         },
         {
           "code": "len-min",
@@ -29,9 +31,6 @@
       "field": "idCard",
       "fieldName": "身份证号",
       "rules": [
-        {
-          "code": "required-false"
-        },
         {
           "code": "len-min",
           "value": 18
@@ -73,10 +72,6 @@
           "code": "required-true",
           "msg": "{}必填",
           "desc": "必填项,为空时会提示XXX必填, 也可以在relList中设置 rel-require-all, 在其中的fields中添加字段也可以用于限定必填"
-        },
-        {
-          "code": "required-false",
-          "desc": "非必填, 如果有值并且设置了其他判断条件,按照其他的判断条件进行判断"
         }
       ]
     },
@@ -238,7 +233,7 @@
         {
           "code": "range-1",
           "msg": "{}值可选范围为: {}",
-          "values": [
+          "value": [
             "v1",
             "v2"
           ],

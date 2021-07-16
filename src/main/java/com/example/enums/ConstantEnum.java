@@ -17,26 +17,7 @@ public class ConstantEnum {
     public static final String DEFAULT_RULE = "defaultRule";
 
     /**
-     * 必填项
+     * 校验模式
      */
-    public static final String REQUIRED = "required";
-    /**
-     * 正则表达式
-     */
-    public static final String REGEX = "regex";
-
-    /**
-     * 长度校验项
-     */
-    public static final String LEN = "len";
-
-    /**
-     * 范围校验项
-     */
-    public static final String RANGE = "range";
-
-    /**
-     * 关联校验项
-     */
-    public static final String RELATE = "relate";
+    public static final String CHECK_MODE = "checkMode";
 }
