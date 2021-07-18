@@ -1,5 +1,6 @@
 package com.example.enums;
 
+import cn.hutool.core.util.StrUtil;
 import com.example.vo.CheckRule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,29 +17,33 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum CheckRuleNameEnum {
     /**
+     * 无
+     */
+    NONE("none"),
+    /**
      * 必填
      */
-    REQUIRED("required", "必填"),
+    REQUIRED("required"),
 
     /**
      * 长度
      */
-    LEN("len", "长度"),
+    LEN("len"),
 
     /**
      * 正则
      */
-    REGEX("regex", "正则"),
+    REGEX("regex"),
 
     /**
      * 关联
      */
-    RELATE("relate", "关联"),
+    RELATE("relate"),
 
     /**
      * 范围
      */
-    RANGE("range", "范围"),
+    RANGE("range"),
     ;
 
     /**
@@ -46,10 +51,6 @@ public enum CheckRuleNameEnum {
      */
     private final String ruleName;
 
-    /**
-     * name
-     */
-    private final String desc;
 
     /**
      * 按照规则名过滤
@@ -61,4 +62,20 @@ public enum CheckRuleNameEnum {
     public static List<CheckRule> filterByRuleName(List<CheckRule> checkRules, CheckRuleNameEnum nameEnum) {
         return checkRules.stream().filter(item -> nameEnum.getRuleName().equals(item.getRuleName())).collect(Collectors.toList());
     }
+
+    /**
+     * 按照code取得类型
+     *
+     * @param code code
+     * @return 校验规则 nameEnum
+     */
+    public static CheckRuleNameEnum getByCode(String code) {
+        for (CheckRuleNameEnum nameEnum : CheckRuleNameEnum.values()) {
+            if (StrUtil.startWith(code, nameEnum.getRuleName())) {
+                return nameEnum;
+            }
+        }
+        return NONE;
+    }
+
 }

@@ -12,4 +12,6 @@ public class CheckObject {
     private String name;
 
     private String orderNo;
+
+    private String idCard;
 }
