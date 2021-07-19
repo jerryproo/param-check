@@ -16,13 +16,8 @@ public class BaseTest {
     private static final String FILE_NAME = "check_rule.json";
 
     @Test
-    public void testParamCheckUtil() {
+    public void test() {
         Console.log(ParamCheckUtil.check(getCheckObject(), getCheckRulesStr()));
-    }
-
-    @Test
-    public void getResourcePath() {
-        Console.log(BaseTest.class.getResource(FILE_NAME));
     }
 
     private CheckObject getCheckObject() {
