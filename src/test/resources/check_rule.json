@@ -1,5 +1,5 @@
 {
-  "desc": "字段校验用json模板,checkMode all为所有字段都校验之后返回, one为有一个不通过即返回 defaultRules中配置了常用的校验格式,在rule中可以按照对应的规则进行配置, checkList用于设置各个字段的校验规则 relList用于设定关联字段的校验",
+  "desc": "字段校验用json模板,checkMode all为所有字段都校验之后返回, one为有一个不通过即返回 defaultRules中配置了常用的校验格式,在rule中可以按照对应的规则进行配置, checkList用于设置各个字段的校验规则 relateList用于设定关联字段的校验",
   "checkMode": "all",
   "checkList": [
     {
@@ -19,7 +19,8 @@
           "msg": "{}格式错误"
         },
         {
-          "code": "relate-require-one",
+          "code": "relate-require-all",
+          "msg": "{}不可以有任何为空",
           "value": [
             "idCard",
             "orderNo"
@@ -32,8 +33,7 @@
       "fieldName": "身份证号",
       "rules": [
         {
-          "code": "required-true",
-          "msg": "{}不可为空哦"
+          "code": "required-true"
         },
         {
           "code": "len-min",
@@ -53,21 +53,49 @@
       "fieldName": "订单编号",
       "rules": [
         {
+          "code": "len-min",
+          "value": 10
+        },
+        {
+          "code": "len-max",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "field": "type",
+      "fieldName": "类型",
+      "rules": [
+        {
           "code": "range",
           "value": [
-            "12345",
-            "aaaa"
+            1,
+            2,
+            3
           ]
         }
       ]
+    },
+    {
+      "field": "phone",
+      "fieldName": "手机号",
+      "rules": [
+        {
+          "code": "regex-phone"
+        }
+      ]
+    },
+    {
+      "field": "nothing",
+      "fieldName": "占位置"
     }
   ],
-  "relList": [
+  "relateList": [
     {
       "code": "relate-require-all",
       "value": [
         "name",
-        "idCard"
+        "nothing"
       ]
     }
   ],
@@ -80,7 +108,7 @@
         {
           "code": "required-true",
           "msg": "{}必填",
-          "desc": "必填项,为空时会提示XXX必填, 也可以在relList中设置 relate-require-all, 在其中的value中添加字段也可以用于限定必填"
+          "desc": "必填项,为空时会提示XXX必填, 也可以在relateList中设置 relate-require-all, 在其中的value中添加字段也可以用于限定必填"
         }
       ]
     },

@@ -14,4 +14,8 @@ public class CheckObject {
     private String orderNo;
 
     private String idCard;
+
+    private String nothing;
+
+    private String type;
 }

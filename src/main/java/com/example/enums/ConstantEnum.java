@@ -12,6 +12,11 @@ public class ConstantEnum {
     public static final String CHECK_LIST = "checkList";
 
     /**
+     * 关联校验List
+     */
+    public static final String RELATE_LIST = "relateList";
+
+    /**
      * 默认规则List
      */
     public static final String DEFAULT_RULE = "defaultRule";

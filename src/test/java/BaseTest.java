@@ -27,10 +27,13 @@ public class BaseTest {
 
     private CheckObject getCheckObject() {
         CheckObject checkObject = new CheckObject();
-        checkObject.setName("sss");
-        checkObject.setOrderNo("");
-        checkObject.setPhone("phone");
-        checkObject.setIdCard("32098119960707397");
+        checkObject.setName("名字");
+        checkObject.setPhone("13012345978");
+        checkObject.setOrderNo("1234567890");
+        // 身份证号码
+        checkObject.setIdCard("1234567890");
+        // 类型范围 1, 2, 3
+        checkObject.setType("4");
         return checkObject;
     }
 
