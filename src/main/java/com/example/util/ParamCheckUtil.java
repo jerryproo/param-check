@@ -173,7 +173,6 @@ public class ParamCheckUtil {
         for (CheckRule checkRule : checkRules) {
             CheckRuleNameEnum nameEnum = CheckRuleNameEnum.getByCode(checkRule.getCode());
             // 按照code分别进行各项校验
-            // todo 使用适配器模式处理
             switch (nameEnum) {
                 case LEN:
                     builder.append(doCheckLen(checkRule, fieldValue, fieldName));
