@@ -74,7 +74,15 @@ public class ParamCheckUtil {
         // 关联字段校验
         final List<CheckRule> relateList = getRelateList(checkRuleJson);
         for (CheckRule checkRule : relateList) {
-            builder.append(doCheckRelate(checkRule, null, null, checkTarget, checkItemList));
+            final String checkRes = doCheckRelate(checkRule, null, null, checkTarget, checkItemList);
+            switch (checkMode) {
+                case ALL:
+                    builder.append(checkRes);
+                    break;
+                case ONE:
+                    return checkRes;
+                default:
+            }
         }
         // checkList 校验
         for (CheckItem item : checkItemList) {

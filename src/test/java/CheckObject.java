@@ -18,4 +18,7 @@ public class CheckObject {
     private String nothing;
 
     private String type;
+
+
+    private String num;
 }
