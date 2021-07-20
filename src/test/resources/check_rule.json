@@ -88,6 +88,17 @@
     {
       "field": "nothing",
       "fieldName": "占位置"
+    },
+    {
+      "field": "num",
+      "fieldName": "数字",
+      "rules": [
+        {
+          "code": "regex",
+          "msg": "数字应该小于32",
+          "value": "/^[0-9]$|^[0-2][0-9]$|^3[0-2]$/"
+        }
+      ]
     }
   ],
   "relateList": [

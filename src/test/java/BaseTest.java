@@ -29,6 +29,7 @@ public class BaseTest {
         checkObject.setIdCard("1234567890");
         // 类型范围 1, 2, 3
         checkObject.setType("4");
+        checkObject.setNum("222");
         return checkObject;
     }
 

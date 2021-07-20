@@ -353,6 +353,7 @@ public class ParamCheckUtil {
      * @return 正则校验结果, 为空表示正常
      */
     private static String doCheckRegex(CheckRule checkRule, String fieldValue, String fieldName) {
+        fieldValue = ObjectUtil.isEmpty(fieldValue) ? CharSequenceUtil.EMPTY : fieldValue;
         boolean matches = Pattern.matches(checkRule.getValue(), fieldValue);
         if (!matches) {
             return getMessage(checkRule, fieldName);
