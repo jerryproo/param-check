@@ -1,7 +1,6 @@
 package com.example.util;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -13,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.enums.CheckModeEnum;
 import com.example.enums.CheckRuleEnum;
 import com.example.enums.CheckRuleNameEnum;
+import com.example.enums.ConstantEnum;
 import com.example.enums.LogLevel;
 import com.example.enums.ResultCode;
 import com.example.exception.BizException;
@@ -33,8 +33,9 @@ import java.util.stream.Stream;
 
 import static com.example.enums.ConstantEnum.CHECK_LIST;
 import static com.example.enums.ConstantEnum.CHECK_MODE;
-import static com.example.enums.ConstantEnum.DEFAULT_RULE;
-import static com.example.enums.ConstantEnum.RELATE_LIST;
+import static com.example.util.ParamCheckCommonUtil.getFieldDuplicateList;
+import static com.example.util.ParamCheckCommonUtil.getFieldEmptyList;
+import static com.example.util.ParamCheckCommonUtil.getMessage;
 
 /**
  * @Author jerrypro
@@ -43,7 +44,10 @@ import static com.example.enums.ConstantEnum.RELATE_LIST;
  */
 @Slf4j
 public class ParamCheckUtil {
-    private static final String COMMA = ";";
+    /**
+     * 默认配置文件名
+     */
+    private static final String DEFAULT_RULE_FILE_NAME = "default_rule.json";
 
     /**
      * 参数校验
@@ -54,31 +58,32 @@ public class ParamCheckUtil {
      * @return 校验结果, 正常时返回空
      */
     public static <T> String check(T t, String checkRulesStr) {
+        final List<CheckRule> defaultCheckRuleList = getDefaultCheckRuleList();
         String checkTarget = String.class.equals(t.getClass()) ? t.toString() : JSON.toJSONString(t);
-        return doCheck(JSON.parseObject(checkTarget), JSON.parseObject(checkRulesStr));
+        final JSONObject checkRuleJSON = JSON.parseObject(checkRulesStr);
+        final JSONObject checkTargetJSON = JSON.parseObject(checkTarget);
+        return doCheck(checkTargetJSON, checkRuleJSON, defaultCheckRuleList);
     }
 
     /**
      * 执行 参数校验
      *
-     * @param checkTarget   校验对象
-     * @param checkRuleJson 校验规则
+     * @param checkTargetJSON 校验对象
+     * @param checkRuleJSON   校验规则
+     * @param defaultRuleList 默认校验规则List
      * @return 校验结果
      */
-    private static String doCheck(JSONObject checkTarget, JSONObject checkRuleJson) {
-        // 获取校验对象List
-        final List<CheckItem> checkItemList = getCheckRuleList(checkRuleJson);
-        final CheckModeEnum checkMode = getCheckMode(checkRuleJson);
-        // 按照ruleName 分别调用各种处理方式
+    private static String doCheck(JSONObject checkTargetJSON, JSONObject checkRuleJSON,
+                                  List<CheckRule> defaultRuleList) {
         StringBuilder builder = new StringBuilder();
-        // 关联字段校验
-        final List<CheckRule> relateList = getRelateList(checkRuleJson);
-        for (CheckRule checkRule : relateList) {
-            builder.append(doCheckRelate(checkRule, null, null, checkTarget, checkItemList));
-        }
+        final CheckModeEnum checkMode = getCheckMode(checkRuleJSON);
+        // 获取校验对象List
+        final List<CheckItem> checkItemList = getCheckRuleList(checkRuleJSON, defaultRuleList);
+        builder.append(ParamCheckRelateUtil.checkRelate(checkRuleJSON, defaultRuleList));
+
         // checkList 校验
         for (CheckItem item : checkItemList) {
-            final String checkRes = doCheckByRuleName(item, checkTarget, checkItemList);
+            final String checkRes = doCheckByRuleName(item, checkTargetJSON, checkItemList);
             // 根据校验模式, 如果是全返回 则添加检查的结果
             // 如果是单个返回 则直接返回检查结果
             if (CharSequenceUtil.isNotEmpty(checkRes)) {
@@ -96,20 +101,7 @@ public class ParamCheckUtil {
         return builder.toString();
     }
 
-    /**
-     * 获取关联校验的List
-     *
-     * @param checkRuleJson 参数校验配置的json对象
-     * @return 关联校验的规则List
-     */
-    private static List<CheckRule> getRelateList(JSONObject checkRuleJson) {
-        final List<CheckRule> defaultRuleList = getDefaultRuleList(checkRuleJson);
-        final Map<String, CheckRule> defaultRuleMap =
-                defaultRuleList.stream().collect(Collectors.toMap(CheckRule::getCode, o -> o));
-        final List<CheckRule> relateList = JSON.parseArray(checkRuleJson.getString(RELATE_LIST), CheckRule.class);
-        setDefaultRuleForRules(defaultRuleMap, relateList);
-        return relateList;
-    }
+
 
     /**
      * 获取检测模式 (统一返回/单个返回)
@@ -253,48 +245,6 @@ public class ParamCheckUtil {
     }
 
     /**
-     * 校验字段值是否有重复
-     *
-     * @param checkTarget 校验对象
-     * @param fieldValue  字段值
-     * @param fieldName   字段名
-     * @param currField   单签字段
-     * @return 重复字段名List
-     */
-    private static List<String> getFieldDuplicateList(JSONObject checkTarget, String fieldValue, String fieldName,
-                                                      String currField) {
-        List<String> list = new ArrayList<>();
-        // 字段值为空无需校验
-        if (CharSequenceUtil.isEmpty(fieldValue)) {
-            return list;
-        }
-        String currFieldValue = checkTarget.getString(currField);
-        if (StrUtil.equals(fieldValue, currFieldValue)) {
-            list.add(fieldName);
-        }
-        return list;
-
-    }
-
-    /**
-     * 获取字段为空的名称List
-     *
-     * @param checkTarget 校验对象
-     * @param field       字段
-     * @param fieldName   字段名
-     * @return 校验的字段是否为空
-     */
-    private static List<String> getFieldEmptyList(JSONObject checkTarget, String field, String fieldName) {
-        // 字段值为空的List
-        List<String> list = new ArrayList<>();
-        String fieldValue = checkTarget.getString(field);
-        if (CharSequenceUtil.isEmpty(fieldValue)) {
-            list.add(fieldName);
-        }
-        return list;
-    }
-
-    /**
      * 参数范围校验
      *
      * @param checkRule  校验规则
@@ -384,16 +334,6 @@ public class ParamCheckUtil {
         return CharSequenceUtil.EMPTY;
     }
 
-    /**
-     * 拼接消息内容
-     *
-     * @param checkRule 校验规则
-     * @param params    传入参数
-     * @return 格式化好的消息内容
-     */
-    private static String getMessage(CheckRule checkRule, Object... params) {
-        return StrUtil.format(checkRule.getMsg(), params) + COMMA;
-    }
 
     /**
      * 判断该字段是否必填
@@ -423,15 +363,15 @@ public class ParamCheckUtil {
     /**
      * 获取校验项
      *
-     * @param checkRuleJson 总的校验规则
+     * @param checkRuleJSON   总的校验规则
+     * @param defaultRuleList 默认校验规则
      * @return 校验项目List
      */
-    private static List<CheckItem> getCheckRuleList(JSONObject checkRuleJson) {
+    private static List<CheckItem> getCheckRuleList(JSONObject checkRuleJSON, List<CheckRule> defaultRuleList) {
         // 获取设置的校验规则项
         final List<CheckItem> checkItems =
-                JSON.parseArray(checkRuleJson.getString(CHECK_LIST), CheckItem.class);
-        final List<CheckRule> allDefaultRuleList = getDefaultRuleList(checkRuleJson);
-        setDefaultRuleIntoCheckItems(allDefaultRuleList, checkItems);
+                JSON.parseArray(checkRuleJSON.getString(CHECK_LIST), CheckItem.class);
+        setDefaultRuleIntoCheckItems(defaultRuleList, checkItems);
         return checkItems;
     }
 
@@ -465,39 +405,37 @@ public class ParamCheckUtil {
     }
 
     /**
-     * 从JSON配置中提取出校验规则map
+     * 从JSON配置中提取出默认的校验规则map
      *
-     * @param defaultRuleObj 校验规则JSONObject
-     * @return 校验规则Map k-v  规则ruleName - 规则详情
+     * @return 校验规则List 规则详情
      */
-    private static Map<String, DefaultRule> getDefaultRuleMap(JSONObject defaultRuleObj) {
-        Map<String, DefaultRule> defaultRuleMap = MapUtil.newHashMap(5);
+    private static List<DefaultRule> getDefaultRuleList() {
+        // 暂时从文件读取, 之后可以从数据库等地方获取
+        final String defaultCheckRuleStr = FileUtil.readFile(DEFAULT_RULE_FILE_NAME);
+        final JSONObject defaultRuleObj = JSON.parseObject(defaultCheckRuleStr).getJSONObject(ConstantEnum.RULES);
+        List<DefaultRule> defaultRuleList = new ArrayList<>();
         for (CheckRuleNameEnum nameEnum : CheckRuleNameEnum.values()) {
             String ruleName = nameEnum.getRuleName();
             String rule = defaultRuleObj.getString(ruleName);
             DefaultRule defaultRule = JSON.parseObject(rule, DefaultRule.class);
             if (ObjectUtil.isNotEmpty(defaultRule)) {
-                defaultRuleMap.put(ruleName, defaultRule);
+                defaultRule.setRuleName(ruleName);
+                defaultRuleList.add(defaultRule);
             }
         }
-        return defaultRuleMap;
+        return defaultRuleList;
     }
 
     /**
      * 获取默认校验List
      *
-     * @param checkRuleJson 读取的JSON配置对象
      * @return 默认校验规则List
      */
-    private static List<CheckRule> getDefaultRuleList(JSONObject checkRuleJson) {
-        final JSONObject defaultRule = checkRuleJson.getJSONObject(DEFAULT_RULE);
-        Map<String, DefaultRule> defaultRuleMap = getDefaultRuleMap(defaultRule);
-        List<CheckRule> defaultRuleList = new ArrayList<>();
-        defaultRuleMap.forEach((k, v) -> {
-            v.getDefaultItem().setRuleName(k);
-            defaultRuleList.addAll(getRuleList(v));
-        });
-        return defaultRuleList;
+    private static List<CheckRule> getDefaultCheckRuleList() {
+        List<DefaultRule> defaultRuleList = getDefaultRuleList();
+        List<CheckRule> list = new ArrayList<>();
+        defaultRuleList.forEach(v -> list.addAll(getCheckRuleList(v)));
+        return list;
     }
 
     /**
@@ -507,7 +445,7 @@ public class ParamCheckUtil {
      * @param defaultRule 默认规则项
      * @return 设置好了默认项的默认校验规则的List
      */
-    private static Collection<? extends CheckRule> getRuleList(DefaultRule defaultRule) {
+    private static Collection<? extends CheckRule> getCheckRuleList(DefaultRule defaultRule) {
         // 默认规则的默认项
         final CheckRule defaultItem = defaultRule.getDefaultItem();
         // 校验规则 List

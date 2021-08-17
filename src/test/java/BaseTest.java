@@ -1,11 +1,8 @@
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import com.example.util.FileUtil;
 import com.example.util.ParamCheckUtil;
+import mt.CheckObject;
 import org.junit.Test;
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * @Author jerrypro
@@ -17,12 +14,7 @@ public class BaseTest {
 
     @Test
     public void testParamCheckUtil() {
-        Console.log(ParamCheckUtil.check(getCheckObject(), getCheckRulesStr()));
-    }
-
-    @Test
-    public void getResourcePath() {
-        Console.log(BaseTest.class.getResource(FILE_NAME));
+        Console.log(ParamCheckUtil.check(getCheckObject(), FileUtil.readFile(FILE_NAME)));
     }
 
     private CheckObject getCheckObject() {
@@ -37,9 +29,5 @@ public class BaseTest {
         return checkObject;
     }
 
-    private String getCheckRulesStr() {
-        final File file = new File(Objects.requireNonNull(BaseTest.class.getResource(FILE_NAME)).getFile());
-        return new String(FileUtil.readBytes(file), StandardCharsets.UTF_8);
-    }
 
 }

@@ -19,7 +19,7 @@ public class ConstantEnum {
     /**
      * 默认规则List
      */
-    public static final String DEFAULT_RULE = "defaultRule";
+    public static final String RULES = "rules";
 
     /**
      * 校验模式
