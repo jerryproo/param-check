@@ -7,6 +7,15 @@ package com.example.util;
  */
 public class CommonConstant {
     interface Separator {
+        /**
+         * 分号
+         */
         String SEMICOLON = ";";
+
+        /**
+         * 句号
+         */
+        String PERIOD = "。";
+
     }
 }
